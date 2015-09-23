@@ -1,0 +1,23 @@
+VAGRANTFILE_API_VERSION = "2"
+
+VM_NAME = "activiti"
+VM_IP= "192.168.56.95"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = "CentOS-6.4-x86_64-v20130731"
+  config.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box"
+
+  config.vm.define :activiti do |activiti|
+    activiti.vm.hostname = VM_NAME
+    activiti.vm.network :private_network, ip: VM_IP
+	activiti.vm.provider :virtualbox do |v|
+      v.name = VM_NAME
+      v.customize ["modifyvm", :id, "--memory", 2048] 
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    end
+  end
+
+  config.vm.provision "shell", path: "provisioning.sh"
+  
+end
